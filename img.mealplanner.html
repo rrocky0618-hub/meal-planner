@@ -1,0 +1,1697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MealPlanner Pro | Recipe & Meal Design App</title>
+    <meta name="description" content="Plan meals, create recipes, generate grocery lists, and get AI-powered cooking assistance with our all-in-one meal planning web app.">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #4CAF50;
+            --primary-dark: #388E3C;
+            --secondary: #FF9800;
+            --light: #f9f9f9;
+            --dark: #333;
+            --gray: #eee;
+            --gray-dark: #777;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --radius: 8px;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 1.5rem 2rem;
+            box-shadow: var(--shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo i {
+            font-size: 2.5rem;
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: opacity 0.3s;
+        }
+
+        nav a:hover {
+            opacity: 0.8;
+        }
+
+        /* Main Layout */
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 20px;
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            flex: 1;
+            min-width: 300px;
+            background: white;
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            height: fit-content;
+        }
+
+        .main-content {
+            flex: 3;
+            min-width: 300px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--gray);
+        }
+
+        .card-header h2 {
+            color: var(--primary-dark);
+            font-size: 1.5rem;
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary);
+        }
+
+        .btn-secondary:hover {
+            background-color: #F57C00;
+        }
+
+        .btn-small {
+            padding: 5px 10px;
+            font-size: 0.9rem;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: var(--radius);
+            font-size: 1rem;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        /* Meal Planner */
+        .meal-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .meal-day {
+            background: var(--light);
+            border-radius: var(--radius);
+            padding: 15px;
+            border-left: 5px solid var(--secondary);
+            position: relative;
+            transition: transform 0.2s;
+        }
+
+        .meal-day:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .meal-day h4 {
+            margin-bottom: 10px;
+            color: var(--primary-dark);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .meal-edit-btn {
+            background: transparent;
+            border: none;
+            color: var(--primary);
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .meal-item {
+            margin-bottom: 8px;
+            padding: 5px;
+            border-bottom: 1px dashed #ddd;
+        }
+
+        .meal-type {
+            font-weight: 600;
+            color: var(--primary);
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        .meal-dish {
+            padding-left: 10px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .meal-dish:hover {
+            background-color: #f0f0f0;
+        }
+
+        .meal-dish-text {
+            flex: 1;
+        }
+
+        .meal-dish-edit {
+            color: var(--gray-dark);
+            font-size: 0.8rem;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .meal-dish:hover .meal-dish-edit {
+            opacity: 1;
+        }
+
+        .empty-meal {
+            color: var(--gray-dark);
+            font-style: italic;
+            font-size: 0.9rem;
+        }
+
+        /* Meal Editor Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            width: 90%;
+            max-width: 600px;
+            border-radius: var(--radius);
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--gray);
+        }
+
+        .modal-header h3 {
+            color: var(--primary-dark);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray-dark);
+        }
+
+        .meal-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .meal-option {
+            background: var(--light);
+            padding: 10px;
+            border-radius: var(--radius);
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+
+        .meal-option:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .meal-option.selected {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary-dark);
+        }
+
+        .custom-meal-input {
+            margin-top: 10px;
+        }
+
+        /* Grocery List */
+        .grocery-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid var(--gray);
+        }
+
+        .grocery-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .item-controls i {
+            cursor: pointer;
+            color: var(--gray-dark);
+            transition: color 0.3s;
+        }
+
+        .item-controls i:hover {
+            color: var(--primary);
+        }
+
+        /* Recipe List */
+        .recipe-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .recipe-card {
+            background: var(--light);
+            border-radius: var(--radius);
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+
+        .recipe-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .recipe-img {
+            height: 150px;
+            background-color: var(--secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 4rem;
+        }
+
+        .recipe-content {
+            padding: 15px;
+        }
+
+        /* Chatbot */
+        .chatbot-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+        }
+
+        .chatbot-btn {
+            background-color: var(--secondary);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .chatbot-window {
+            position: absolute;
+            bottom: 70px;
+            right: 0;
+            width: 350px;
+            height: 500px;
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chatbot-header {
+            background: var(--primary);
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chatbot-body {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .chat-message {
+            padding: 10px 15px;
+            border-radius: 20px;
+            max-width: 80%;
+        }
+
+        .chat-message.bot {
+            background: var(--gray);
+            align-self: flex-start;
+        }
+
+        .chat-message.user {
+            background: var(--primary);
+            color: white;
+            align-self: flex-end;
+        }
+
+        .chat-typing {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--gray-dark);
+            font-style: italic;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--gray-dark);
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-5px);
+            }
+        }
+
+        .chatbot-footer {
+            padding: 15px;
+            border-top: 1px solid var(--gray);
+            display: flex;
+        }
+
+        .chatbot-footer input {
+            flex: 1;
+            margin-right: 10px;
+        }
+
+        /* Ad Spaces */
+        .ad-space {
+            background: #f0f0f0;
+            border: 2px dashed #ccc;
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #888;
+            font-weight: 600;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .ad-horizontal {
+            width: 100%;
+            height: 100px;
+            margin: 20px 0;
+        }
+
+        .ad-vertical {
+            height: 600px;
+            width: 160px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1100px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+            }
+            
+            nav ul {
+                margin-top: 15px;
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .logo {
+                margin-bottom: 15px;
+            }
+            
+            .meal-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+            
+            .chatbot-window {
+                width: 300px;
+                height: 400px;
+            }
+            
+            .ad-vertical {
+                display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .recipe-list {
+                grid-template-columns: 1fr;
+            }
+            
+            .meal-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .chatbot-window {
+                width: calc(100vw - 40px);
+                right: -10px;
+            }
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid var(--gray);
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--gray-dark);
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 25px 20px;
+            margin-top: 40px;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+        }
+
+        /* Utility Classes */
+        .hidden {
+            display: none !important;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .mt-20 {
+            margin-top: 20px;
+        }
+
+        .mb-20 {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <i class="fas fa-utensils"></i>
+            <h1>MealPlanner Pro</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="#recipes"><i class="fas fa-book"></i> Recipes</a></li>
+                <li><a href="#planner"><i class="fas fa-calendar-alt"></i> Meal Planner</a></li>
+                <li><a href="#grocery"><i class="fas fa-shopping-cart"></i> Grocery List</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Ad Space - Top Banner -->
+    <div class="container">
+        <div class="ad-space ad-horizontal" id="ad-top-banner">
+            <!-- Google AdSense Ad Slot -->
+            <div>Ad Space (728x90)</div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <!-- Ad Space - Sidebar -->
+            <div class="ad-space ad-vertical mb-20" id="ad-sidebar">
+                <div>Ad Space (160x600)</div>
+            </div>
+
+            <!-- Add Recipe Form -->
+            <div class="card">
+                <div class="card-header">
+                    <h2>Add New Recipe</h2>
+                </div>
+                <form id="recipe-form">
+                    <div class="form-group">
+                        <label for="recipe-name">Recipe Name</label>
+                        <input type="text" id="recipe-name" placeholder="Enter recipe name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="recipe-category">Category</label>
+                        <select id="recipe-category">
+                            <option value="breakfast">Breakfast</option>
+                            <option value="lunch">Lunch</option>
+                            <option value="dinner">Dinner</option>
+                            <option value="snack">Snack</option>
+                            <option value="dessert">Dessert</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="recipe-ingredients">Ingredients (one per line)</label>
+                        <textarea id="recipe-ingredients" placeholder="Enter ingredients, one per line" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="recipe-instructions">Instructions</label>
+                        <textarea id="recipe-instructions" placeholder="Enter step-by-step instructions" required></textarea>
+                    </div>
+                    <button type="submit" class="btn"><i class="fas fa-plus-circle"></i> Add Recipe</button>
+                </form>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="card">
+                <div class="card-header">
+                    <h2>Your Stats</h2>
+                </div>
+                <div class="stats">
+                    <p><strong>Recipes:</strong> <span id="recipe-count">12</span></p>
+                    <p><strong>Meals Planned This Week:</strong> <span id="meal-count">7</span></p>
+                    <p><strong>Grocery Items:</strong> <span id="grocery-count">15</span></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Tabs -->
+            <div class="tabs">
+                <div class="tab active" data-tab="recipes">My Recipes</div>
+                <div class="tab" data-tab="planner">Meal Planner</div>
+                <div class="tab" data-tab="grocery">Grocery List</div>
+            </div>
+
+            <!-- Recipes Tab -->
+            <div class="tab-content active" id="recipes-tab">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>My Recipe Collection</h2>
+                        <button class="btn btn-secondary" id="filter-recipes">
+                            <i class="fas fa-filter"></i> Filter
+                        </button>
+                    </div>
+                    <div class="recipe-list" id="recipe-list">
+                        <!-- Recipes will be dynamically added here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Meal Planner Tab -->
+            <div class="tab-content" id="planner-tab">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Weekly Meal Planner</h2>
+                        <div>
+                            <button class="btn btn-secondary" id="clear-meal-plan">
+                                <i class="fas fa-trash"></i> Clear All
+                            </button>
+                            <button class="btn" id="generate-meal-plan">
+                                <i class="fas fa-magic"></i> Auto-Fill
+                            </button>
+                        </div>
+                    </div>
+                    <div class="meal-grid" id="meal-planner">
+                        <!-- Days will be dynamically added here -->
+                    </div>
+                </div>
+
+                <!-- Ad Space - Middle Banner -->
+                <div class="ad-space ad-horizontal mt-20" id="ad-middle-banner">
+                    <div>Ad Space (728x90)</div>
+                </div>
+            </div>
+
+            <!-- Grocery List Tab -->
+            <div class="tab-content" id="grocery-tab">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Grocery Shopping List</h2>
+                        <div>
+                            <button class="btn btn-secondary" id="clear-list">
+                                <i class="fas fa-trash"></i> Clear All
+                            </button>
+                            <button class="btn" id="print-list">
+                                <i class="fas fa-print"></i> Print
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="new-grocery-item" placeholder="Add a new item to your grocery list">
+                        <button class="btn mt-20" id="add-grocery-item">
+                            <i class="fas fa-plus"></i> Add Item
+                        </button>
+                    </div>
+                    <div id="grocery-list">
+                        <!-- Grocery items will be dynamically added here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Meal Editor Modal -->
+    <div class="modal" id="meal-editor-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">Edit Meal</h3>
+                <button class="close-modal" id="close-modal">&times;</button>
+            </div>
+            <div id="modal-body">
+                <!-- Content will be dynamically added here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Chatbot -->
+    <div class="chatbot-container">
+        <div class="chatbot-btn" id="chatbot-toggle">
+            <i class="fas fa-robot"></i>
+        </div>
+        <div class="chatbot-window" id="chatbot-window">
+            <div class="chatbot-header">
+                <h3>AI Cooking Assistant</h3>
+                <i class="fas fa-times" id="chatbot-close"></i>
+            </div>
+            <div class="chatbot-body" id="chatbot-messages">
+                <div class="chat-message bot">
+                    Hello! I'm your AI cooking assistant. I can help you with recipes, cooking techniques, ingredient substitutions, and meal planning tips. Ask me anything about cooking!
+                </div>
+            </div>
+            <div class="chatbot-footer">
+                <input type="text" id="chatbot-input" placeholder="Ask me anything about cooking...">
+                <button class="btn" id="chatbot-send"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-links">
+            <a href="#">About Us</a>
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+            <a href="#">Contact</a>
+            <a href="#">FAQ</a>
+        </div>
+        <p>&copy; 2023 MealPlanner Pro. All rights reserved.</p>
+        <p class="mt-20">This website uses Google AdSense for advertisements. By using this site, you agree to the use of cookies for personalized ads.</p>
+    </footer>
+
+    <script>
+        // Sample recipe data
+        const sampleRecipes = [
+            {
+                id: 1,
+                name: "Vegetable Stir Fry",
+                category: "dinner",
+                ingredients: ["2 bell peppers", "1 onion", "2 carrots", "1 cup broccoli", "3 tbsp soy sauce", "2 cloves garlic", "1 tbsp ginger"],
+                instructions: "1. Chop all vegetables. 2. Heat oil in a wok. 3. Stir fry vegetables for 5-7 minutes. 4. Add soy sauce, garlic, and ginger. 5. Cook for another 2 minutes. Serve hot."
+            },
+            {
+                id: 2,
+                name: "Banana Pancakes",
+                category: "breakfast",
+                ingredients: ["2 ripe bananas", "2 eggs", "1/2 cup flour", "1/4 cup milk", "1 tsp baking powder", "1 tbsp honey"],
+                instructions: "1. Mash bananas in a bowl. 2. Mix in eggs, flour, milk, baking powder. 3. Heat a pan with butter. 4. Pour batter to form pancakes. 5. Cook until golden on both sides. Drizzle with honey."
+            },
+            {
+                id: 3,
+                name: "Chicken Salad",
+                category: "lunch",
+                ingredients: ["2 chicken breasts", "4 cups lettuce", "1 cucumber", "1 tomato", "1/4 cup olive oil", "2 tbsp lemon juice", "Salt and pepper"],
+                instructions: "1. Grill chicken until cooked through. 2. Chop lettuce, cucumber, tomato. 3. Slice chicken. 4. Mix olive oil, lemon juice, salt, pepper for dressing. 5. Toss everything together."
+            },
+            {
+                id: 4,
+                name: "Oatmeal with Fruits",
+                category: "breakfast",
+                ingredients: ["1 cup oats", "2 cups milk or water", "1 banana", "1/2 cup berries", "1 tbsp honey", "Pinch of cinnamon"],
+                instructions: "1. Cook oats with milk or water. 2. Slice banana. 3. Mix in berries, honey, and cinnamon. 4. Serve warm."
+            },
+            {
+                id: 5,
+                name: "Pasta with Tomato Sauce",
+                category: "dinner",
+                ingredients: ["200g pasta", "2 cups tomato sauce", "1 onion", "2 cloves garlic", "1 tbsp olive oil", "Fresh basil", "Parmesan cheese"],
+                instructions: "1. Cook pasta according to package. 2. Sauté onion and garlic in olive oil. 3. Add tomato sauce and simmer. 4. Mix pasta with sauce. 5. Garnish with basil and Parmesan."
+            }
+        ];
+
+        // Editable meal plan - EMPTY by default
+        let mealPlan = [
+            { 
+                day: "Monday", 
+                breakfast: "", 
+                lunch: "", 
+                dinner: "",
+                notes: "" 
+            },
+            { 
+                day: "Tuesday", 
+                breakfast: "", 
+                lunch: "", 
+                dinner: "",
+                notes: "" 
+            },
+            { 
+                day: "Wednesday", 
+                breakfast: "", 
+                lunch: "", 
+                dinner: "",
+                notes: "" 
+            },
+            { 
+                day: "Thursday", 
+                breakfast: "", 
+                lunch: "", 
+                dinner: "",
+                notes: "" 
+            },
+            { 
+                day: "Friday", 
+                breakfast: "", 
+                lunch: "", 
+                dinner: "",
+                notes: "" 
+            },
+            { 
+                day: "Saturday", 
+                breakfast: "", 
+                lunch: "", 
+                dinner: "",
+                notes: "" 
+            },
+            { 
+                day: "Sunday", 
+                breakfast: "", 
+                lunch: "", 
+                dinner: "",
+                notes: "" 
+            }
+        ];
+
+        // Grocery list - EMPTY by default
+        let groceryList = [];
+
+        // Variables for meal editing
+        let currentEditingDay = null;
+        let currentEditingMealType = null;
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load sample data
+            loadRecipes();
+            loadMealPlan();
+            loadGroceryList();
+            updateStats();
+
+            // Tab functionality
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // Update active tab
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Show active content
+                    document.querySelectorAll('.tab-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    document.getElementById(`${tabId}-tab`).classList.add('active');
+                });
+            });
+
+            // Add recipe form submission
+            document.getElementById('recipe-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const name = document.getElementById('recipe-name').value;
+                const category = document.getElementById('recipe-category').value;
+                const ingredients = document.getElementById('recipe-ingredients').value.split('\n');
+                const instructions = document.getElementById('recipe-instructions').value;
+                
+                const newRecipe = {
+                    id: Date.now(),
+                    name,
+                    category,
+                    ingredients: ingredients.filter(item => item.trim() !== ''),
+                    instructions
+                };
+                
+                // Add to recipes array
+                sampleRecipes.push(newRecipe);
+                
+                // Reset form
+                this.reset();
+                
+                // Reload recipes
+                loadRecipes();
+                updateStats();
+                
+                // Show confirmation
+                alert('Recipe added successfully!');
+            });
+
+            // Add grocery item
+            document.getElementById('add-grocery-item').addEventListener('click', function() {
+                const input = document.getElementById('new-grocery-item');
+                const itemName = input.value.trim();
+                
+                if (itemName) {
+                    const newItem = {
+                        id: Date.now(),
+                        name: itemName,
+                        checked: false
+                    };
+                    
+                    groceryList.push(newItem);
+                    input.value = '';
+                    loadGroceryList();
+                    updateStats();
+                }
+            });
+
+            // Enter key for grocery item
+            document.getElementById('new-grocery-item').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    document.getElementById('add-grocery-item').click();
+                }
+            });
+
+            // Clear grocery list
+            document.getElementById('clear-list').addEventListener('click', function() {
+                if (confirm('Are you sure you want to clear the entire grocery list?')) {
+                    groceryList = [];
+                    loadGroceryList();
+                    updateStats();
+                }
+            });
+
+            // Clear meal plan
+            document.getElementById('clear-meal-plan').addEventListener('click', function() {
+                if (confirm('Are you sure you want to clear the entire meal plan?')) {
+                    mealPlan.forEach(day => {
+                        day.breakfast = "";
+                        day.lunch = "";
+                        day.dinner = "";
+                        day.notes = "";
+                    });
+                    loadMealPlan();
+                    updateStats();
+                }
+            });
+
+            // Print grocery list
+            document.getElementById('print-list').addEventListener('click', function() {
+                window.print();
+            });
+
+            // Generate meal plan (suggestion only)
+            document.getElementById('generate-meal-plan').addEventListener('click', function() {
+                const modal = document.getElementById('meal-editor-modal');
+                const modalTitle = document.getElementById('modal-title');
+                const modalBody = document.getElementById('modal-body');
+                
+                modalTitle.textContent = "Meal Suggestions";
+                modalBody.innerHTML = `
+                    <p>Select recipes to suggest for your meal plan:</p>
+                    
+                    <div class="form-group">
+                        <label>Breakfast Suggestions</label>
+                        <div class="meal-options" id="breakfast-suggestions">
+                            ${sampleRecipes.filter(r => r.category === 'breakfast').map(recipe => 
+                                `<div class="meal-option" data-recipe-id="${recipe.id}">${recipe.name}</div>`
+                            ).join('')}
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Lunch Suggestions</label>
+                        <div class="meal-options" id="lunch-suggestions">
+                            ${sampleRecipes.filter(r => r.category === 'lunch').map(recipe => 
+                                `<div class="meal-option" data-recipe-id="${recipe.id}">${recipe.name}</div>`
+                            ).join('')}
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Dinner Suggestions</label>
+                        <div class="meal-options" id="dinner-suggestions">
+                            ${sampleRecipes.filter(r => r.category === 'dinner').map(recipe => 
+                                `<div class="meal-option" data-recipe-id="${recipe.id}">${recipe.name}</div>`
+                            ).join('')}
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <p class="mb-20"><em>Note: These are just suggestions. Click on a recipe to see it in the meal editor.</em></p>
+                        <button class="btn" id="close-suggestions">Close Suggestions</button>
+                    </div>
+                `;
+                
+                modal.style.display = 'flex';
+                
+                // Add click handlers for suggestions
+                document.querySelectorAll('.meal-option[data-recipe-id]').forEach(option => {
+                    option.addEventListener('click', function() {
+                        const recipeId = parseInt(this.getAttribute('data-recipe-id'));
+                        const recipe = sampleRecipes.find(r => r.id === recipeId);
+                        
+                        if (recipe) {
+                            // Close suggestions modal
+                            modal.style.display = 'none';
+                            
+                            // Show recipe details
+                            alert(`Recipe: ${recipe.name}\n\nIngredients:\n- ${recipe.ingredients.join('\n- ')}\n\nInstructions:\n${recipe.instructions}\n\nTo add this to your meal plan, edit a specific meal slot.`);
+                        }
+                    });
+                });
+                
+                document.getElementById('close-suggestions').addEventListener('click', function() {
+                    modal.style.display = 'none';
+                });
+            });
+
+            // Modal functionality
+            const modal = document.getElementById('meal-editor-modal');
+            const closeModal = document.getElementById('close-modal');
+
+            closeModal.addEventListener('click', function() {
+                modal.style.display = 'none';
+            });
+
+            window.addEventListener('click', function(event) {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+
+            // Chatbot functionality
+            const chatbotToggle = document.getElementById('chatbot-toggle');
+            const chatbotWindow = document.getElementById('chatbot-window');
+            const chatbotClose = document.getElementById('chatbot-close');
+            const chatbotSend = document.getElementById('chatbot-send');
+            const chatbotInput = document.getElementById('chatbot-input');
+            const chatbotMessages = document.getElementById('chatbot-messages');
+
+            chatbotToggle.addEventListener('click', function() {
+                chatbotWindow.style.display = 'flex';
+            });
+
+            chatbotClose.addEventListener('click', function() {
+                chatbotWindow.style.display = 'none';
+            });
+
+            chatbotSend.addEventListener('click', sendMessage);
+            chatbotInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+
+            async function sendMessage() {
+                const message = chatbotInput.value.trim();
+                if (!message) return;
+
+                // Add user message
+                addMessage(message, 'user');
+                chatbotInput.value = '';
+                chatbotInput.disabled = true;
+                chatbotSend.disabled = true;
+
+                // Show typing indicator
+                const typingIndicator = addTypingIndicator();
+                
+                try {
+                    // Try to get AI response from internet
+                    const response = await getAIResponseFromInternet(message);
+                    
+                    // Remove typing indicator
+                    typingIndicator.remove();
+                    
+                    // Add bot response
+                    addMessage(response, 'bot');
+                } catch (error) {
+                    // Remove typing indicator
+                    typingIndicator.remove();
+                    
+                    // Fallback to local responses
+                    const fallbackResponse = getAIResponseFallback(message);
+                    addMessage(fallbackResponse, 'bot');
+                } finally {
+                    // Re-enable input
+                    chatbotInput.disabled = false;
+                    chatbotSend.disabled = false;
+                    chatbotInput.focus();
+                }
+            }
+
+            function addMessage(text, sender) {
+                const messageDiv = document.createElement('div');
+                messageDiv.classList.add('chat-message', sender);
+                messageDiv.textContent = text;
+                chatbotMessages.appendChild(messageDiv);
+                chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+            }
+
+            function addTypingIndicator() {
+                const typingDiv = document.createElement('div');
+                typingDiv.classList.add('chat-typing');
+                typingDiv.innerHTML = `
+                    <span>Searching for answer...</span>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                `;
+                chatbotMessages.appendChild(typingDiv);
+                chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+                return typingDiv;
+            }
+
+            // Enhanced AI response function that tries to search the internet
+            async function getAIResponseFromInternet(message) {
+                const lowerMessage = message.toLowerCase();
+                
+                // For demonstration, we'll simulate internet search with enhanced responses
+                // In a real implementation, you would use an actual AI API like OpenAI or Google Gemini
+                
+                // Simulate network delay
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                
+                // Check if it's a cooking-related question
+                const cookingKeywords = ['recipe', 'cook', 'bake', 'ingredient', 'meal', 'food', 'dinner', 'lunch', 'breakfast', 'kitchen', 'chef', 'nutrition', 'healthy', 'diet'];
+                const isCookingQuestion = cookingKeywords.some(keyword => lowerMessage.includes(keyword));
+                
+                if (!isCookingQuestion) {
+                    return "I'm specialized in cooking and food-related questions. Please ask me about recipes, cooking techniques, ingredients, or meal planning.";
+                }
+                
+                // Enhanced responses based on common cooking questions
+                if (lowerMessage.includes('recipe') && lowerMessage.includes('vegetarian')) {
+                    return "Based on current trends, popular vegetarian recipes include:\n\n1. **Lentil & Sweet Potato Curry** - Rich in protein and flavor\n2. **Mushroom & Spinach Lasagna** - Creamy and satisfying\n3. **Chickpea Buddha Bowl** - Packed with nutrients\n4. **Vegetable Paella** - Spanish-inspired rice dish\n5. **Stuffed Bell Peppers** - Colorful and nutritious\n\nFor detailed recipes, I recommend checking reputable cooking websites like AllRecipes, Food Network, or BBC Good Food.";
+                } else if (lowerMessage.includes('substitute') || lowerMessage.includes('replace')) {
+                    return "Here are common ingredient substitutions I found:\n\n• **Buttermilk** = 1 cup milk + 1 tbsp lemon juice/vinegar (let sit 5 mins)\n• **Baking powder** = 1/4 tsp baking soda + 1/2 tsp cream of tartar\n• **Brown sugar** = 1 cup white sugar + 1-2 tbsp molasses\n• **Fresh herbs** = 1/3 amount of dried herbs\n• **Sour cream** = Plain yogurt or Greek yogurt\n• **Heavy cream** = 3/4 cup milk + 1/4 cup melted butter\n• **Egg** (for baking) = 1 tbsp ground flaxseed + 3 tbsp water";
+                } else if (lowerMessage.includes('healthy') || lowerMessage.includes('diet')) {
+                    return "Current nutrition research suggests:\n\n• **Focus on whole foods** - vegetables, fruits, lean proteins, whole grains\n• **Cook methods matter** - steaming, baking, grilling > frying\n• **Portion control** - use smaller plates, measure servings\n• **Meal prep** - helps maintain healthy choices during busy weeks\n• **Hydration** - drink water before meals, limit sugary drinks\n• **Mediterranean diet** is consistently ranked as one of the healthiest eating patterns";
+                } else if (lowerMessage.includes('time') && lowerMessage.includes('save')) {
+                    return "Time-saving cooking tips from professional chefs:\n\n1. **Sunday Meal Prep** - Cook grains, chop veggies, marinate proteins\n2. **One-Pan Meals** - Sheet pan dinners reduce cleanup\n3. **Slow Cooker/Instant Pot** - Set and forget meals\n4. **Double Recipes** - Freeze half for future busy days\n5. **Knife Skills** - Proper chopping technique saves time\n6. **Organized Kitchen** - Keep frequently used items accessible\n7. **Pre-cut Vegetables** - Worth the extra cost on busy days";
+                } else if (lowerMessage.includes('meal plan') || lowerMessage.includes('planner')) {
+                    return "Effective meal planning strategies:\n\n• **Theme Nights** (Taco Tuesday, Pizza Friday)\n• **Batch Cooking** - Make large quantities and repurpose\n• **Seasonal Produce** - Cheaper and more flavorful\n• **Leftover Strategy** - Plan meals that create intentional leftovers\n• **Flexible Planning** - Allow for 1-2 nights of flexibility\n• **Inventory First** - Plan meals around what you already have\n• **Family Involvement** - Get input from everyone to reduce waste";
+                } else if (lowerMessage.includes('low carb') || lowerMessage.includes('keto')) {
+                    return "Low-carb/keto cooking tips:\n\n• **Cauliflower** replaces rice, potatoes, and even pizza crust\n• **Zucchini noodles** or **spaghetti squash** instead of pasta\n• **Almond flour/coconut flour** for baking\n• **Avocado** as a healthy fat source\n• **Lean proteins** - chicken, fish, tofu\n• **Healthy fats** - olive oil, nuts, seeds\n• **Non-starchy vegetables** - leafy greens, broccoli, peppers";
+                } else {
+                    // Generic cooking advice with search simulation
+                    return `I've analyzed cooking resources and found helpful information about "${message}". Here's what I recommend:\n\nFor the most accurate and up-to-date information, I suggest checking recent cooking blogs, YouTube cooking channels, or food science websites. Current trends in cooking include air fryer recipes, plant-based alternatives, and global cuisine exploration.\n\nWould you like more specific information about any particular aspect of cooking?`;
+                }
+            }
+
+            // Fallback responses when internet is not available
+            function getAIResponseFallback(message) {
+                const lowerMessage = message.toLowerCase();
+                
+                if (lowerMessage.includes('recipe') && lowerMessage.includes('vegetarian')) {
+                    return "For vegetarian recipes, try lentil curry or vegetable lasagna. You can add these as custom meals in your planner.";
+                } else if (lowerMessage.includes('substitute') || lowerMessage.includes('replace')) {
+                    return "Common substitutions: yogurt for sour cream, applesauce for oil in baking, or lemon juice for vinegar.";
+                } else if (lowerMessage.includes('healthy') || lowerMessage.includes('diet')) {
+                    return "Focus on whole foods like vegetables, lean proteins, and whole grains. Try grilling or baking instead of frying.";
+                } else if (lowerMessage.includes('time') && lowerMessage.includes('save')) {
+                    return "Meal prep on weekends can save time. Also, try one-pan recipes or slow cooker meals.";
+                } else if (lowerMessage.includes('meal plan') || lowerMessage.includes('planner')) {
+                    return "In your meal planner, click on any meal to edit it. You can choose from your recipes or add custom meals. The grocery list is separate - add items manually as needed.";
+                } else {
+                    return "I can help with recipe ideas, cooking techniques, ingredient substitutions, and meal planning tips. What specific cooking question do you have?";
+                }
+            }
+
+            // Update stats
+            function updateStats() {
+                document.getElementById('recipe-count').textContent = sampleRecipes.length;
+                document.getElementById('meal-count').textContent = mealPlan.reduce((total, day) => {
+                    return total + (day.breakfast !== "" ? 1 : 0) + 
+                           (day.lunch !== "" ? 1 : 0) + 
+                           (day.dinner !== "" ? 1 : 0);
+                }, 0);
+                document.getElementById('grocery-count').textContent = groceryList.length;
+            }
+        });
+
+        // Load recipes into the UI
+        function loadRecipes() {
+            const recipeList = document.getElementById('recipe-list');
+            recipeList.innerHTML = '';
+            
+            if (sampleRecipes.length === 0) {
+                recipeList.innerHTML = '<p class="empty-meal">No recipes yet. Add your first recipe using the form on the left!</p>';
+                return;
+            }
+            
+            sampleRecipes.forEach(recipe => {
+                const recipeCard = document.createElement('div');
+                recipeCard.className = 'recipe-card';
+                recipeCard.innerHTML = `
+                    <div class="recipe-img">
+                        <i class="fas fa-${getRecipeIcon(recipe.category)}"></i>
+                    </div>
+                    <div class="recipe-content">
+                        <h3>${recipe.name}</h3>
+                        <p><strong>Category:</strong> ${recipe.category.charAt(0).toUpperCase() + recipe.category.slice(1)}</p>
+                        <p><strong>Ingredients:</strong> ${recipe.ingredients.length} items</p>
+                        <button class="btn mt-20 view-recipe-btn" data-id="${recipe.id}">View Recipe</button>
+                    </div>
+                `;
+                
+                recipeList.appendChild(recipeCard);
+            });
+
+            // Add event listeners to view recipe buttons
+            document.querySelectorAll('.view-recipe-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const recipeId = parseInt(this.getAttribute('data-id'));
+                    const recipe = sampleRecipes.find(r => r.id === recipeId);
+                    
+                    if (recipe) {
+                        alert(`Recipe: ${recipe.name}\n\nIngredients:\n- ${recipe.ingredients.join('\n- ')}\n\nInstructions:\n${recipe.instructions}\n\nTo add this to your meal plan, edit a meal slot and select this recipe.`);
+                    }
+                });
+            });
+        }
+
+        // Load meal plan into the UI
+        function loadMealPlan() {
+            const mealPlanner = document.getElementById('meal-planner');
+            mealPlanner.innerHTML = '';
+            
+            mealPlan.forEach((day, index) => {
+                const dayDiv = document.createElement('div');
+                dayDiv.className = 'meal-day';
+                dayDiv.innerHTML = `
+                    <h4>${day.day} <button class="meal-edit-btn" data-day-index="${index}"><i class="fas fa-edit"></i></button></h4>
+                    
+                    <div class="meal-item">
+                        <span class="meal-type">Breakfast</span>
+                        <div class="meal-dish" data-day-index="${index}" data-meal-type="breakfast">
+                            <span class="meal-dish-text">${day.breakfast || '<span class="empty-meal">Click to add breakfast</span>'}</span>
+                            <span class="meal-dish-edit">click to edit</span>
+                        </div>
+                    </div>
+                    
+                    <div class="meal-item">
+                        <span class="meal-type">Lunch</span>
+                        <div class="meal-dish" data-day-index="${index}" data-meal-type="lunch">
+                            <span class="meal-dish-text">${day.lunch || '<span class="empty-meal">Click to add lunch</span>'}</span>
+                            <span class="meal-dish-edit">click to edit</span>
+                        </div>
+                    </div>
+                    
+                    <div class="meal-item">
+                        <span class="meal-type">Dinner</span>
+                        <div class="meal-dish" data-day-index="${index}" data-meal-type="dinner">
+                            <span class="meal-dish-text">${day.dinner || '<span class="empty-meal">Click to add dinner</span>'}</span>
+                            <span class="meal-dish-edit">click to edit</span>
+                        </div>
+                    </div>
+                    
+                    ${day.notes ? `<p class="mt-20"><strong>Notes:</strong> ${day.notes}</p>` : ''}
+                `;
+                
+                mealPlanner.appendChild(dayDiv);
+            });
+
+            // Add event listeners for edit buttons
+            document.querySelectorAll('.meal-edit-btn').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const dayIndex = parseInt(this.getAttribute('data-day-index'));
+                    openMealEditor(dayIndex, null);
+                });
+            });
+
+            // Add event listeners for meal items
+            document.querySelectorAll('.meal-dish').forEach(item => {
+                item.addEventListener('click', function() {
+                    const dayIndex = parseInt(this.getAttribute('data-day-index'));
+                    const mealType = this.getAttribute('data-meal-type');
+                    openMealEditor(dayIndex, mealType);
+                });
+            });
+        }
+
+        // Open meal editor modal
+        function openMealEditor(dayIndex, mealType) {
+            const modal = document.getElementById('meal-editor-modal');
+            const modalTitle = document.getElementById('modal-title');
+            const modalBody = document.getElementById('modal-body');
+            
+            currentEditingDay = dayIndex;
+            currentEditingMealType = mealType;
+            
+            const day = mealPlan[dayIndex];
+            
+            if (mealType) {
+                // Editing a specific meal
+                modalTitle.textContent = `Edit ${mealType} for ${day.day}`;
+                modalBody.innerHTML = createMealSelector(mealType, day[mealType]);
+            } else {
+                // Editing the entire day
+                modalTitle.textContent = `Edit Meals for ${day.day}`;
+                modalBody.innerHTML = `
+                    <div class="form-group">
+                        <label>Breakfast</label>
+                        ${createMealSelectorHTML('breakfast', day.breakfast)}
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Lunch</label>
+                        ${createMealSelectorHTML('lunch', day.lunch)}
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Dinner</label>
+                        ${createMealSelectorHTML('dinner', day.dinner)}
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="day-notes">Notes</label>
+                        <textarea id="day-notes" placeholder="Add notes for this day...">${day.notes || ''}</textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <button class="btn" id="save-all-meals">Save All Changes</button>
+                    </div>
+                `;
+                
+                // Add event listener for save all button
+                document.getElementById('save-all-meals').addEventListener('click', saveAllMealsForDay);
+            }
+            
+            modal.style.display = 'flex';
+            
+            // Setup event listeners for meal options
+            setupMealOptionListeners();
+        }
+
+        // Create meal selector HTML - FIXED VERSION
+        function createMealSelectorHTML(mealType, currentValue) {
+            // Get recipes for this meal type
+            const recipesForMeal = sampleRecipes.filter(recipe => {
+                if (mealType === 'breakfast') return recipe.category === 'breakfast';
+                if (mealType === 'lunch') return recipe.category === 'lunch';
+                if (mealType === 'dinner') return recipe.category === 'dinner';
+                return true;
+            });
+            
+            // Check if current value is a custom meal (not in recipes)
+            const isCustomMeal = currentValue && !recipesForMeal.find(r => r.name === currentValue);
+            
+            let html = `
+                <div class="meal-options" id="meal-options-${mealType}" data-meal-type="${mealType}">
+                    <div class="meal-option ${currentValue === '' ? 'selected' : ''}" data-meal-value="">
+                        Empty (No meal planned)
+                    </div>
+            `;
+            
+            recipesForMeal.forEach(recipe => {
+                html += `
+                    <div class="meal-option ${currentValue === recipe.name ? 'selected' : ''}" data-meal-value="${recipe.name}">
+                        ${recipe.name}
+                    </div>
+                `;
+            });
+            
+            html += `
+                    <div class="meal-option ${isCustomMeal ? 'selected' : ''}" data-meal-value="custom">
+                        Custom Meal...
+                    </div>
+                </div>
+                
+                <div class="form-group custom-meal-input" id="custom-meal-container-${mealType}" style="${isCustomMeal ? 'display: block;' : 'display: none;'}">
+                    <input type="text" id="custom-meal-input-${mealType}" placeholder="Enter custom meal name" value="${isCustomMeal ? currentValue : ''}">
+                </div>
+            `;
+            
+            return html;
+        }
+
+        // Create meal selector for single meal - FIXED VERSION
+        function createMealSelector(mealType, currentValue) {
+            const day = mealPlan[currentEditingDay];
+            
+            let html = createMealSelectorHTML(mealType, currentValue);
+            
+            html += `
+                <div class="form-group mt-20">
+                    <button class="btn" id="save-single-meal">Save ${mealType}</button>
+                </div>
+            `;
+            
+            return html;
+        }
+
+        // Setup meal option listeners
+        function setupMealOptionListeners() {
+            // Clear existing listeners
+            document.querySelectorAll('.meal-option').forEach(option => {
+                option.replaceWith(option.cloneNode(true));
+            });
+            
+            // Add new listeners
+            document.querySelectorAll('.meal-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    const mealType = this.closest('.meal-options')?.getAttribute('data-meal-type');
+                    
+                    if (mealType) {
+                        // Clear all selections for this meal type
+                        document.querySelectorAll(`#meal-options-${mealType} .meal-option`).forEach(opt => {
+                            opt.classList.remove('selected');
+                        });
+                        
+                        // Select clicked option
+                        this.classList.add('selected');
+                        
+                        // Show/hide custom input
+                        const value = this.getAttribute('data-meal-value');
+                        const customContainer = document.getElementById(`custom-meal-container-${mealType}`);
+                        if (customContainer) {
+                            customContainer.style.display = value === 'custom' ? 'block' : 'none';
+                        }
+                    }
+                });
+            });
+            
+            // Setup save button for single meal
+            const saveSingleBtn = document.getElementById('save-single-meal');
+            if (saveSingleBtn) {
+                saveSingleBtn.addEventListener('click', saveSingleMeal);
+            }
+        }
+
+        // Save all meals for a day - FIXED VERSION
+        function saveAllMealsForDay() {
+            const day = mealPlan[currentEditingDay];
+            const notes = document.getElementById('day-notes').value;
+            
+            // Update notes
+            day.notes = notes;
+            
+            // Update each meal
+            ['breakfast', 'lunch', 'dinner'].forEach(mealType => {
+                const selectedOption = document.querySelector(`#meal-options-${mealType} .meal-option.selected`);
+                if (selectedOption) {
+                    const value = selectedOption.getAttribute('data-meal-value');
+                    if (value === 'custom') {
+                        const customInput = document.getElementById(`custom-meal-input-${mealType}`);
+                        day[mealType] = customInput ? customInput.value.trim() : '';
+                    } else if (value === '') {
+                        day[mealType] = '';
+                    } else {
+                        day[mealType] = value;
+                    }
+                }
+            });
+            
+            // Close modal and reload
+            document.getElementById('meal-editor-modal').style.display = 'none';
+            loadMealPlan();
+            updateStats();
+        }
+
+        // Save single meal - FIXED VERSION
+        function saveSingleMeal() {
+            const day = mealPlan[currentEditingDay];
+            const selectedOption = document.querySelector(`#meal-options-${currentEditingMealType} .meal-option.selected`);
+            
+            if (selectedOption) {
+                const value = selectedOption.getAttribute('data-meal-value');
+                
+                if (value === 'custom') {
+                    const customInput = document.getElementById(`custom-meal-input-${currentEditingMealType}`);
+                    day[currentEditingMealType] = customInput ? customInput.value.trim() : '';
+                } else if (value === '') {
+                    day[currentEditingMealType] = '';
+                } else {
+                    day[currentEditingMealType] = value;
+                }
+                
+                // Close modal and reload
+                document.getElementById('meal-editor-modal').style.display = 'none';
+                loadMealPlan();
+                updateStats();
+            }
+        }
+
+        // Load grocery list into the UI
+        function loadGroceryList() {
+            const groceryListContainer = document.getElementById('grocery-list');
+            groceryListContainer.innerHTML = '';
+            
+            if (groceryList.length === 0) {
+                groceryListContainer.innerHTML = '<p class="empty-meal">Your grocery list is empty. Add items using the form above.</p>';
+                return;
+            }
+            
+            groceryList.forEach(item => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'grocery-item';
+                itemDiv.innerHTML = `
+                    <div>
+                        <input type="checkbox" id="item-${item.id}" ${item.checked ? 'checked' : ''}>
+                        <label for="item-${item.id}" class="${item.checked ? 'checked' : ''}">${item.name}</label>
+                    </div>
+                    <div class="item-controls">
+                        <i class="fas fa-edit" data-id="${item.id}"></i>
+                        <i class="fas fa-trash" data-id="${item.id}"></i>
+                    </div>
+                `;
+                
+                groceryListContainer.appendChild(itemDiv);
+                
+                // Add event listeners for checkbox
+                const checkbox = itemDiv.querySelector('input[type="checkbox"]');
+                checkbox.addEventListener('change', function() {
+                    const itemId = parseInt(this.id.split('-')[1]);
+                    const itemIndex = groceryList.findIndex(item => item.id === itemId);
+                    if (itemIndex !== -1) {
+                        groceryList[itemIndex].checked = this.checked;
+                        updateStats();
+                    }
+                });
+                
+                // Add event listeners for edit button
+                const editBtn = itemDiv.querySelector('.fa-edit');
+                editBtn.addEventListener('click', function() {
+                    const itemId = parseInt(this.getAttribute('data-id'));
+                    const item = groceryList.find(item => item.id === itemId);
+                    
+                    if (item) {
+                        const newName = prompt('Edit item name:', item.name);
+                        if (newName && newName.trim() !== '') {
+                            item.name = newName.trim();
+                            loadGroceryList();
+                        }
+                    }
+                });
+                
+                // Add event listeners for delete button
+                const deleteBtn = itemDiv.querySelector('.fa-trash');
+                deleteBtn.addEventListener('click', function() {
+                    const itemId = parseInt(this.getAttribute('data-id'));
+                    const itemIndex = groceryList.findIndex(item => item.id === itemId);
+                    
+                    if (itemIndex !== -1) {
+                        groceryList.splice(itemIndex, 1);
+                        loadGroceryList();
+                        updateStats();
+                    }
+                });
+            });
+        }
+
+        // Helper function to get icon based on recipe category
+        function getRecipeIcon(category) {
+            switch(category) {
+                case 'breakfast': return 'coffee';
+                case 'lunch': return 'hamburger';
+                case 'dinner': return 'utensils';
+                case 'snack': return 'apple-alt';
+                case 'dessert': return 'ice-cream';
+                default: return 'utensils';
+            }
+        }
+    </script>
+</body>
+</html>
